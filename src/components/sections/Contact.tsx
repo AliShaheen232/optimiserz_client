@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { InquiryFormData, ValidationErrors } from "../../types";
 import { validateInquiryForm } from "../../lib/validation";
-import { Send, CheckCircle2, AlertCircle, Info } from "lucide-react";
+import { Send, CheckCircle2, Info } from "lucide-react";
 
 const initialFormData: InquiryFormData = {
   fullName: "",
