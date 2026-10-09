@@ -1,0 +1,27 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg-main: #0B1020;
+  --bg-secondary: #11182A;
+  --bg-card: #151E32;
+  --text-primary: #F7F9FC;
+  --text-secondary: #A7B2C5;
+  --accent-primary: #6366F1;
+  --accent-secondary: #38BDF8;
+  --border-color: #27334A;
+}
+
+body {
+  background-color: var(--bg-main);
+  color: var(--text-primary);
+  font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  overflow-x: hidden;
+}
+
+/* Restrained grid background for tech depth */
+.tech-grid {
+  background-image: radial-gradient(rgba(99, 102, 241, 0.08) 1px, transparent 1px);
+  background-size: 32px 32px;
+}
