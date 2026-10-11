@@ -2,26 +2,54 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --bg-main: #0B1020;
-  --bg-secondary: #11182A;
-  --bg-card: #151E32;
-  --text-primary: #F7F9FC;
-  --text-secondary: #A7B2C5;
-  --accent-primary: #6366F1;
-  --accent-secondary: #38BDF8;
-  --border-color: #27334A;
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 6rem;
+  }
+  body {
+    @apply bg-page font-sans text-ink antialiased;
+  }
+  h1, h2, h3 {
+    @apply font-display tracking-tight text-ink;
+  }
+  ::selection {
+    @apply bg-violet-400/25;
+  }
 }
 
-body {
-  background-color: var(--bg-main);
-  color: var(--text-primary);
-  font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
-  overflow-x: hidden;
-}
-
-/* Restrained grid background for tech depth */
-.tech-grid {
-  background-image: radial-gradient(rgba(99, 102, 241, 0.08) 1px, transparent 1px);
-  background-size: 32px 32px;
+@layer components {
+  .text-gradient {
+    @apply bg-accent bg-clip-text text-transparent;
+  }
+  .card {
+    @apply rounded-2xl border border-line bg-surface shadow-card;
+  }
+  .glass {
+    @apply rounded-2xl border border-white/70 bg-white/60 shadow-card backdrop-blur-xl;
+  }
+  .label {
+    @apply font-mono text-[11px] uppercase tracking-[0.16em];
+  }
+  .icon-chip {
+    @apply flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-accent text-white shadow-glow;
+  }
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-xl px-5 py-3 text-sm font-semibold transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-400 focus-visible:ring-offset-2 focus-visible:ring-offset-page active:scale-[0.98];
+  }
+  .btn-primary {
+    @apply btn bg-ink text-white hover:bg-[#1B2740];
+  }
+  .btn-ghost {
+    @apply btn border border-line bg-surface text-ink hover:border-violet-400/60;
+  }
+  .field {
+    @apply w-full rounded-xl border border-line bg-white px-4 py-3 text-sm text-ink placeholder:text-ink-mute focus:border-violet-400 focus:outline-none focus:ring-2 focus:ring-violet-400/20;
+  }
+  .aurora {
+    background:
+      radial-gradient(520px 340px at 15% 25%, rgba(27, 168, 224, 0.26), transparent 70%),
+      radial-gradient(560px 360px at 82% 15%, rgba(100, 102, 240, 0.26), transparent 70%),
+      radial-gradient(440px 280px at 55% 85%, rgba(255, 181, 71, 0.18), transparent 70%);
+  }
 }

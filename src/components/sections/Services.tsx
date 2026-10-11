@@ -1,133 +1,70 @@
 import React, { useState } from "react";
-import { servicesData } from "../../config/services";
-import { ServiceItem } from "../../types";
+import { Globe, BrainCircuit, Radar, Layers, Send, Server, Bot, ArrowRight } from "lucide-react";
+import type { LucideIcon } from "lucide-react";
+import { Container } from "../ui/Container";
+import { SectionHeading } from "../ui/SectionHeading";
 import { ServiceModal } from "../modals/ServiceModal";
-import {
-  Globe,
-  Layers,
-  BrainCircuit,
-  Bot,
-  Send,
-  ArrowRight,
-  CheckCircle2,
-} from "lucide-react";
+import { servicesData } from "../../config/services";
+import type { ServiceId, ServiceItem } from "../../types";
 
-const serviceIcons: Record<string, React.ReactNode> = {
-  "web-development": <Globe className="w-5 h-5 text-[#6366F1]" />,
-  "blockchain-development": <Layers className="w-5 h-5 text-[#38BDF8]" />,
-  "artificial-intelligence": (
-    <BrainCircuit className="w-5 h-5 text-indigo-400" />
-  ),
-  "agentic-ai": <Bot className="w-5 h-5 text-[#6366F1]" />,
-  "mailbox-bulk-email": <Send className="w-5 h-5 text-[#38BDF8]" />,
+const icons: Record<ServiceId, LucideIcon> = {
+  "web-apps": Globe,
+  "ai-automation": BrainCircuit,
+  "search-visibility": Radar,
+  blockchain: Layers,
+  email: Send,
+  "hosting-care": Server,
+  bots: Bot,
 };
 
-export const Services: React.FC = () => {
-  const [activeService, setActiveService] = useState<ServiceItem | null>(null);
+export const Services: React.FC<{ onInquire: (service: string) => void }> = ({ onInquire }) => {
+  const [active, setActive] = useState<ServiceItem | null>(null);
 
   return (
-    <section
-      id="services"
-      className="py-20 bg-[#11182A]/50 border-t border-b border-[#27334A]"
-    >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Section Heading */}
-        <div className="max-w-3xl mb-14">
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-[#F7F9FC] tracking-tight">
-            What We Build
-          </h2>
-          <p className="mt-3 text-base text-[#A7B2C5] leading-relaxed">
-            Different challenges require different tools. We bring together
-            software engineering, emerging technology, and practical
-            problem-solving to build solutions around your goals.
-          </p>
-        </div>
+    <section id="services" className="py-16 sm:py-20">
+      <Container>
+        <SectionHeading eyebrow="What we build" title="What We Build" text="Seven ways we help you build, automate and grow." />
 
-        {/* 5 Service Cards Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {servicesData.map((service, idx) => {
-            const isMarquee = idx === 3; // Feature Agentic AI as a marquee card
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          {servicesData.map((service) => {
+            const Icon = icons[service.id];
             return (
-              <div
+              <button
                 key={service.id}
-                className={`flex flex-col justify-between bg-[#151E32] border border-[#27334A] rounded-xl p-6 transition-all duration-200 hover:border-[#6366F1]/60 hover:shadow-lg ${
-                  isMarquee
-                    ? "lg:col-span-2 bg-gradient-to-br from-[#151E32] to-[#17223b]"
-                    : ""
-                }`}
+                onClick={() => setActive(service)}
+                className="card group flex flex-col p-6 text-left transition hover:-translate-y-0.5 hover:border-violet-400/50"
               >
-                <div>
-                  <div className="flex items-center justify-between mb-4">
-                    <div className="p-2.5 rounded-lg bg-[#0B1020] border border-[#27334A]">
-                      {serviceIcons[service.id]}
-                    </div>
-                    <span className="text-xs font-mono text-[#A7B2C5]">
-                      0{idx + 1}
-                    </span>
-                  </div>
-
-                  <h3 className="text-lg font-bold text-[#F7F9FC] tracking-tight">
-                    {service.title}
-                  </h3>
-
-                  <p className="text-xs text-[#38BDF8] font-medium mt-1 mb-3">
-                    {service.tagline}
-                  </p>
-
-                  <p className="text-sm text-[#A7B2C5] leading-relaxed mb-5">
-                    {service.shortDescription}
-                  </p>
-
-                  {/* Capabilities List */}
-                  <div className="space-y-2 mb-6">
-                    {service.capabilities
-                      .slice(0, isMarquee ? 4 : 3)
-                      .map((cap, i) => (
-                        <div
-                          key={i}
-                          className="flex items-start gap-2 text-xs text-[#A7B2C5]"
-                        >
-                          <CheckCircle2 className="w-3.5 h-3.5 text-[#6366F1] shrink-0 mt-0.5" />
-                          <span>{cap}</span>
-                        </div>
-                      ))}
-                  </div>
-
-                  {/* Agentic Workflow highlight in marquee card */}
-                  {isMarquee && (
-                    <div className="p-3 mb-6 bg-[#0B1020] border border-[#27334A] rounded-lg">
-                      <div className="text-xs font-semibold text-[#F7F9FC] mb-1">
-                        Illustrative Agent Workflow:
-                      </div>
-                      <div className="text-[11px] text-[#A7B2C5] font-mono">
-                        Understand the task → Gather information → Use approved
-                        tools → Complete the work → Request human approval
-                      </div>
-                    </div>
-                  )}
-                </div>
-
-                <div className="pt-4 border-t border-[#27334A]/80">
-                  <button
-                    type="button"
-                    onClick={() => setActiveService(service)}
-                    className="inline-flex items-center text-xs font-semibold text-white hover:text-[#38BDF8] transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#38BDF8] rounded"
-                  >
-                    Learn More &amp; Capabilities
-                    <ArrowRight className="w-3.5 h-3.5 ml-1.5" />
-                  </button>
-                </div>
-              </div>
+                <span className="icon-chip">
+                  <Icon className="h-5 w-5" />
+                </span>
+                <h3 className="mt-5 text-base font-semibold">{service.title}</h3>
+                <p className="mt-1.5 text-sm leading-relaxed text-ink-soft">{service.tagline}</p>
+                <span className="mt-auto inline-flex items-center gap-1 pt-5 text-xs font-semibold text-violet-600 opacity-80 transition group-hover:opacity-100">
+                  Learn more <ArrowRight className="h-3.5 w-3.5 transition group-hover:translate-x-0.5" />
+                </span>
+              </button>
             );
           })}
-        </div>
-      </div>
 
-      {/* Accessible Detail Dialog */}
+          <div className="flex flex-col justify-between rounded-2xl bg-accent p-6 text-white shadow-glow">
+            <div>
+              <h3 className="text-lg font-semibold !text-white">Not sure what you need?</h3>
+              <p className="mt-2 text-sm text-white/90">Tell us the goal. We'll suggest the path.</p>
+            </div>
+            <button onClick={() => onInquire("Other")} className="btn mt-6 self-start bg-white !py-2.5 text-ink hover:bg-white/90">
+              Talk to us <ArrowRight className="h-4 w-4" />
+            </button>
+          </div>
+        </div>
+      </Container>
+
       <ServiceModal
-        service={activeService}
-        isOpen={!!activeService}
-        onClose={() => setActiveService(null)}
+        service={active}
+        onClose={() => setActive(null)}
+        onInquire={(s) => {
+          setActive(null);
+          onInquire(s.title);
+        }}
       />
     </section>
   );

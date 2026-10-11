@@ -1,70 +1,28 @@
 import React from "react";
+import { Container } from "../ui/Container";
+import { SectionHeading } from "../ui/SectionHeading";
+import { steps } from "../../config/content";
 
-const stages = [
-  {
-    step: "01",
-    name: "Understand",
-    description:
-      "We start by understanding your goals, your users, and the problem you're trying to solve.",
-  },
-  {
-    step: "02",
-    name: "Plan",
-    description:
-      "We agree on the scope, priorities, technical direction, and what a successful outcome should look like.",
-  },
-  {
-    step: "03",
-    name: "Build",
-    description:
-      "We develop the solution in manageable stages, share progress, and gather feedback along the way.",
-  },
-  {
-    step: "04",
-    name: "Improve",
-    description:
-      "After delivery, we can help refine the product, address issues, and plan the next stage of development.",
-  },
-];
+export const Process: React.FC = () => (
+  <section id="process" className="py-16 sm:py-20">
+    <Container>
+      <SectionHeading align="center" eyebrow="How it works" title={<>Four steps. <span className="text-gradient">No surprises.</span></>} />
 
-export const Process: React.FC = () => {
-  return (
-    <section
-      id="approach"
-      className="py-20 bg-[#11182A]/40 border-t border-[#27334A]"
-    >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="max-w-3xl mb-14">
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-[#F7F9FC] tracking-tight">
-            From an Idea to Something That Works.
-          </h2>
-          <p className="mt-3 text-base text-[#A7B2C5] leading-relaxed">
-            A straightforward, four-stage development process focused on
-            clarity, practical outcomes, and steady progress.
-          </p>
-        </div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {stages.map((stage) => (
-            <div
-              key={stage.step}
-              className="bg-[#151E32] border border-[#27334A] rounded-xl p-6 relative flex flex-col justify-between"
-            >
-              <div>
-                <span className="text-xs font-mono text-[#6366F1] font-semibold">
-                  STAGE {stage.step}
-                </span>
-                <h3 className="text-lg font-bold text-[#F7F9FC] mt-2 mb-3">
-                  {stage.name}
-                </h3>
-                <p className="text-sm text-[#A7B2C5] leading-relaxed">
-                  {stage.description}
-                </p>
-              </div>
+      <ol className="relative grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <span className="absolute left-0 right-0 top-[2.9rem] hidden h-px bg-gradient-to-r from-transparent via-violet-400/50 to-transparent lg:block" />
+        {steps.map(({ icon: Icon, title, text }, i) => (
+          <li key={title} className="card relative p-6">
+            <div className="flex items-center justify-between">
+              <span className="icon-chip">
+                <Icon className="h-5 w-5" />
+              </span>
+              <span className="label text-ink-mute">Step 0{i + 1}</span>
             </div>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-};
+            <h3 className="mt-5 text-lg font-semibold">{title}</h3>
+            <p className="mt-1 text-sm text-ink-soft">{text}</p>
+          </li>
+        ))}
+      </ol>
+    </Container>
+  </section>
+);

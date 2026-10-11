@@ -1,0 +1,44 @@
+;;
+;; Domain:     optimiserz.com.
+;; Exported:   2026-10-11 00:26:49
+;;
+;; This file is intended for use for informational and archival
+;; purposes ONLY and MUST be edited before use on a production
+;; DNS server.  In particular, you must:
+;;   -- update the SOA record with the correct authoritative name server
+;;   -- update the SOA record with the contact e-mail address information
+;;   -- update the NS record(s) with the authoritative name servers for this domain.
+;;
+;; For further information, please consult the BIND documentation
+;; located on the following website:
+;;
+;; http://www.isc.org/
+;;
+;; And RFC 1035:
+;;
+;; http://www.ietf.org/rfc/rfc1035.txt
+;;
+;; Please note that we do NOT offer technical support for any use
+;; of this zone data, the BIND name server, or any other third-party
+;; DNS software.
+;;
+;; Use at your own risk.
+;; SOA Record
+optimiserz.com	3600	IN	SOA	amit.ns.cloudflare.com. dns.cloudflare.com. 2054334500 10000 2400 604800 3600
+
+;; NS Records
+optimiserz.com.	86400	IN	NS	amit.ns.cloudflare.com.
+optimiserz.com.	86400	IN	NS	cora.ns.cloudflare.com.
+
+;; CNAME Records
+autoconfig.optimiserz.com.	1	IN	CNAME	autoconfig.mail.hostinger.com. ; cf_tags=cf-proxied:true
+autodiscover.optimiserz.com.	1	IN	CNAME	autodiscover.mail.hostinger.com. ; cf_tags=cf-proxied:true
+rsend.optimiserz.com.	3600	IN	CNAME	send.forge.rmta.net. ; cf_tags=cf-proxied:false
+
+;; MX Records
+send.optimiserz.com.	1	IN	MX	10 feedback-smtp.us-east-1.amazonses.com.
+
+;; TXT Records
+_dmarc.optimiserz.com.	1	IN	TXT	"v=DMARC1; p=none"
+resend._domainkey.optimiserz.com.	3600	IN	TXT	"p=MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDv5P71IqMD5WNyEh+QA3uKVLLMU9VeAfoHxzbd9cEiDTCedpjqGJ7P/BKPsU4ox50aeLgwNpgL89p+mFgHmJpe9rWwCYnC0Q84vdccxROBsPV8i2BC4cueaNiKT7WWhfp4Tu6FOznZUgVhyATHVxhZkEY1cTOyPkFoei9khvHG4wIDAQAB"
+send.optimiserz.com.	1	IN	TXT	"v=spf1 include:amazonses.com ~all"

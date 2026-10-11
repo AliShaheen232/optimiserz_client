@@ -1,384 +1,182 @@
 import React, { useState } from "react";
-import { InquiryFormData, ValidationErrors } from "../../types";
+import { Send, Info, Mail } from "lucide-react";
+import { Container } from "../ui/Container";
+import { siteConfig } from "../../config/site";
+import { serviceOptions } from "../../config/content";
 import { validateInquiryForm } from "../../lib/validation";
-import { Send, CheckCircle2, Info } from "lucide-react";
+import type { InquiryFormData, ValidationErrors } from "../../types";
 
-const initialFormData: InquiryFormData = {
-  fullName: "",
-  businessEmail: "",
-  companyName: "",
-  serviceCategory: "",
-  estimatedBudget: "",
-  projectDetails: "",
-  consent: false,
-};
+interface Props {
+  service: string;
+  onServiceChange: (service: string) => void;
+}
 
-export const Contact: React.FC = () => {
-  const [formData, setFormData] = useState<InquiryFormData>(initialFormData);
+const empty = { fullName: "", email: "", company: "", details: "", consent: false };
+
+const FieldError: React.FC<{ msg?: string }> = ({ msg }) => (msg ? <p className="mt-1.5 text-xs text-rose-600">{msg}</p> : null);
+
+const Label: React.FC<{ htmlFor: string; children: React.ReactNode; optional?: boolean }> = ({ htmlFor, children, optional }) => (
+  <label htmlFor={htmlFor} className="mb-1.5 block text-xs font-semibold text-ink">
+    {children} {optional ? <span className="font-normal text-ink-mute">(optional)</span> : <span className="text-cyan-600">*</span>}
+  </label>
+);
+
+export const Contact: React.FC<Props> = ({ service, onServiceChange }) => {
+  const [form, setForm] = useState(empty);
   const [errors, setErrors] = useState<ValidationErrors>({});
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submitStatus, setSubmitStatus] = useState<
-    "idle" | "success_dev" | "error"
-  >("idle");
+  const [status, setStatus] = useState<"idle" | "sending" | "sent" | "failed">("idle");
 
-  const handleChange = (
-    e: React.ChangeEvent<
-      HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
-    >,
-  ) => {
+  const update = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value, type } = e.target;
-    if (type === "checkbox") {
-      const { checked } = e.target as HTMLInputElement;
-      setFormData((prev) => ({ ...prev, [name]: checked }));
-    } else {
-      setFormData((prev) => ({ ...prev, [name]: value }));
-    }
-    // Clear field-specific validation error on change
-    if (errors[name as keyof ValidationErrors]) {
-      setErrors((prev) => ({ ...prev, [name]: undefined }));
-    }
+    if (name === "service") onServiceChange(value);
+    else setForm({ ...form, [name]: type === "checkbox" ? (e.target as HTMLInputElement).checked : value });
+    setErrors({ ...errors, [name]: undefined });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const submit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const validationErrors = validateInquiryForm(formData);
+    const data: InquiryFormData = { ...form, service };
+    const found = validateInquiryForm(data);
+    setErrors(found);
+    if (Object.keys(found).length) return;
 
-    if (Object.keys(validationErrors).length > 0) {
-      setErrors(validationErrors);
-      return;
+    setStatus("sending");
+    try {
+      const website = (new FormData(e.currentTarget).get("website") as string) || "";
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ...data, website }),
+      });
+      setStatus(res.ok ? "sent" : "failed");
+    } catch {
+      setStatus("failed");
     }
-
-    setIsSubmitting(true);
-
-    // Honest handling: simulate submission latency and display developer-mode confirmation
-    setTimeout(() => {
-      setIsSubmitting(false);
-      setSubmitStatus("success_dev");
-    }, 600);
   };
+
+  const border = (key: keyof ValidationErrors) => (errors[key] ? "!border-rose-400/70" : "");
 
   return (
-    <section id="contact" className="py-20 border-t border-[#27334A]">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="max-w-3xl mb-12">
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-[#F7F9FC] tracking-tight">
-            Have Something in Mind?
-          </h2>
-          <p className="mt-3 text-base text-[#A7B2C5] leading-relaxed">
-            Tell us a little about what you're building, what needs to improve,
-            or where you need technical help. We'll use that information to
-            understand your requirements and discuss possible next steps.
-          </p>
+    <section id="contact" className="py-16 sm:py-20">
+      <Container>
+        <div className="mb-12 max-w-2xl">
+          <p className="label text-violet-600">Contact</p>
+          <h2 className="mt-3 text-3xl font-semibold sm:text-4xl">Have something in mind?</h2>
+          <p className="mt-4 text-ink-soft">Tell us what you're building or what needs to improve. We'll reply with honest next steps.</p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
-          {/* Form */}
-          <div className="lg:col-span-8 bg-[#151E32] border border-[#27334A] rounded-2xl p-6 sm:p-8">
-            {submitStatus === "success_dev" ? (
-              <div className="space-y-4 py-6">
-                <div className="p-4 rounded-xl bg-emerald-950/40 border border-emerald-800/80 text-emerald-200 space-y-2">
-                  <div className="flex items-center gap-2 font-semibold text-emerald-100">
-                    <CheckCircle2 className="w-5 h-5 text-emerald-400 shrink-0" />
-                    Validation Passed &amp; Inquiry Captured
-                  </div>
-                  <p className="text-xs text-emerald-200/90 leading-relaxed">
-                    <strong>Development Mode Notice:</strong> Form validation
-                    succeeded and your inquiry data is verified. Because a
-                    production email gateway or CRM backend has not been
-                    connected to this environment yet, no live outbound email
-                    was sent.
-                  </p>
-                </div>
-
-                <div className="p-4 rounded-xl bg-[#11182A] border border-[#27334A] text-xs font-mono text-[#A7B2C5] space-y-1">
-                  <div>
-                    <strong>Name:</strong> {formData.fullName}
-                  </div>
-                  <div>
-                    <strong>Email:</strong> {formData.businessEmail}
-                  </div>
-                  <div>
-                    <strong>Service:</strong> {formData.serviceCategory}
-                  </div>
-                  <div>
-                    <strong>Company:</strong>{" "}
-                    {formData.companyName || "Not specified"}
-                  </div>
-                </div>
-
+        <div className="grid gap-6 lg:grid-cols-12">
+          <div className="card p-6 sm:p-8 lg:col-span-8">
+            {status === "sent" ? (
+              <div className="py-6">
+                <h3 className="text-2xl font-semibold">Thanks, {form.fullName.split(" ")[0]}. Message received.</h3>
+                <p className="mt-3 text-ink-soft">We'll get back to you at {form.email} soon.</p>
                 <button
-                  type="button"
                   onClick={() => {
-                    setFormData(initialFormData);
-                    setSubmitStatus("idle");
+                    setForm(empty);
+                    onServiceChange("");
+                    setStatus("idle");
                   }}
-                  className="px-4 py-2 text-xs font-semibold text-white bg-[#6366F1] rounded-lg hover:bg-[#5254e0] transition-colors"
+                  className="btn-ghost mt-6"
                 >
-                  Submit Another Inquiry
+                  Send another message
                 </button>
               </div>
             ) : (
-              <form onSubmit={handleSubmit} noValidate className="space-y-5">
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                  {/* Full Name */}
+              <form onSubmit={submit} noValidate className="space-y-5">
+                <div className="grid gap-5 sm:grid-cols-2">
                   <div>
-                    <label
-                      htmlFor="fullName"
-                      className="block text-xs font-medium text-[#F7F9FC] mb-1.5"
-                    >
-                      Full Name <span className="text-red-400">*</span>
-                    </label>
-                    <input
-                      type="text"
-                      id="fullName"
-                      name="fullName"
-                      value={formData.fullName}
-                      onChange={handleChange}
-                      placeholder="Jane Doe"
-                      className={`w-full px-3.5 py-2.5 bg-[#0B1020] border ${
-                        errors.fullName ? "border-red-500" : "border-[#27334A]"
-                      } rounded-lg text-sm text-[#F7F9FC] placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-[#6366F1]`}
-                    />
-                    {errors.fullName && (
-                      <p className="mt-1 text-xs text-red-400">
-                        {errors.fullName}
-                      </p>
-                    )}
+                    <Label htmlFor="fullName">Full name</Label>
+                    <input id="fullName" name="fullName" value={form.fullName} onChange={update} placeholder="Jane Doe" className={`field ${border("fullName")}`} />
+                    <FieldError msg={errors.fullName} />
                   </div>
-
-                  {/* Business Email */}
                   <div>
-                    <label
-                      htmlFor="businessEmail"
-                      className="block text-xs font-medium text-[#F7F9FC] mb-1.5"
-                    >
-                      Business Email <span className="text-red-400">*</span>
-                    </label>
-                    <input
-                      type="email"
-                      id="businessEmail"
-                      name="businessEmail"
-                      value={formData.businessEmail}
-                      onChange={handleChange}
-                      placeholder="jane@company.com"
-                      className={`w-full px-3.5 py-2.5 bg-[#0B1020] border ${
-                        errors.businessEmail
-                          ? "border-red-500"
-                          : "border-[#27334A]"
-                      } rounded-lg text-sm text-[#F7F9FC] placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-[#6366F1]`}
-                    />
-                    {errors.businessEmail && (
-                      <p className="mt-1 text-xs text-red-400">
-                        {errors.businessEmail}
-                      </p>
-                    )}
+                    <Label htmlFor="email">Business email</Label>
+                    <input id="email" name="email" type="email" value={form.email} onChange={update} placeholder="jane@company.com" className={`field ${border("email")}`} />
+                    <FieldError msg={errors.email} />
                   </div>
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
-                  {/* Company Name */}
+                <div className="grid gap-5 sm:grid-cols-2">
                   <div>
-                    <label
-                      htmlFor="companyName"
-                      className="block text-xs font-medium text-[#F7F9FC] mb-1.5"
-                    >
-                      Company Name{" "}
-                      <span className="text-[#A7B2C5] text-[10px]">
-                        (Optional)
-                      </span>
-                    </label>
-                    <input
-                      type="text"
-                      id="companyName"
-                      name="companyName"
-                      value={formData.companyName}
-                      onChange={handleChange}
-                      placeholder="Acme Corp"
-                      className="w-full px-3.5 py-2.5 bg-[#0B1020] border border-[#27334A] rounded-lg text-sm text-[#F7F9FC] placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-[#6366F1]"
-                    />
+                    <Label htmlFor="company" optional>Company name</Label>
+                    <input id="company" name="company" value={form.company} onChange={update} placeholder="Acme Corp" className="field" />
                   </div>
-
-                  {/* Service Selection */}
                   <div>
-                    <label
-                      htmlFor="serviceCategory"
-                      className="block text-xs font-medium text-[#F7F9FC] mb-1.5"
-                    >
-                      Service of Interest{" "}
-                      <span className="text-red-400">*</span>
-                    </label>
-                    <select
-                      id="serviceCategory"
-                      name="serviceCategory"
-                      value={formData.serviceCategory}
-                      onChange={handleChange}
-                      className={`w-full px-3.5 py-2.5 bg-[#0B1020] border ${
-                        errors.serviceCategory
-                          ? "border-red-500"
-                          : "border-[#27334A]"
-                      } rounded-lg text-sm text-[#F7F9FC] focus:outline-none focus:ring-2 focus:ring-[#6366F1]`}
-                    >
+                    <Label htmlFor="service">Service of interest</Label>
+                    <select id="service" name="service" value={service} onChange={update} className={`field ${border("service")}`}>
                       <option value="">Select a service...</option>
-                      <option value="Web Development">Web Development</option>
-                      <option value="Blockchain Development">
-                        Blockchain Development
-                      </option>
-                      <option value="Artificial Intelligence">
-                        Artificial Intelligence
-                      </option>
-                      <option value="Agentic AI & Automation">
-                        Agentic AI &amp; Automation
-                      </option>
-                      <option value="Mailbox Services & Bulk Email">
-                        Mailbox Services &amp; Bulk Email
-                      </option>
-                      <option value="Multiple Services">
-                        Multiple Services
-                      </option>
-                      <option value="Other">Other</option>
+                      {serviceOptions.map((o) => (
+                        <option key={o} value={o}>{o}</option>
+                      ))}
                     </select>
-                    {errors.serviceCategory && (
-                      <p className="mt-1 text-xs text-red-400">
-                        {errors.serviceCategory}
-                      </p>
-                    )}
-                  </div>
-
-                  {/* Estimated Budget */}
-                  <div>
-                    <label
-                      htmlFor="estimatedBudget"
-                      className="block text-xs font-medium text-[#F7F9FC] mb-1.5"
-                    >
-                      Estimated Budget{" "}
-                      <span className="text-[#A7B2C5] text-[10px]">
-                        (Optional)
-                      </span>
-                    </label>
-                    <select
-                      id="estimatedBudget"
-                      name="estimatedBudget"
-                      value={formData.estimatedBudget}
-                      onChange={handleChange}
-                      className="w-full px-3.5 py-2.5 bg-[#0B1020] border border-[#27334A] rounded-lg text-sm text-[#F7F9FC] focus:outline-none focus:ring-2 focus:ring-[#6366F1]"
-                    >
-                      <option value="">Prefer to discuss</option>
-                      <option value="Under $5,000">Under $5,000</option>
-                      <option value="$5,000 - $15,000">$5,000 - $15,000</option>
-                      <option value="$15,000 - $35,000">
-                        $15,000 - $35,000
-                      </option>
-                      <option value="$35,000+">$35,000+</option>
-                    </select>
+                    <FieldError msg={errors.service} />
                   </div>
                 </div>
 
-                {/* Project Details */}
                 <div>
-                  <label
-                    htmlFor="projectDetails"
-                    className="block text-xs font-medium text-[#F7F9FC] mb-1.5"
-                  >
-                    Project Details <span className="text-red-400">*</span>
-                  </label>
+                  <Label htmlFor="details">Project details</Label>
                   <textarea
-                    id="projectDetails"
-                    name="projectDetails"
+                    id="details"
+                    name="details"
                     rows={4}
-                    value={formData.projectDetails}
-                    onChange={handleChange}
-                    placeholder="Briefly describe what you are looking to build, technical requirements, or key timeline goals..."
-                    className={`w-full px-3.5 py-2.5 bg-[#0B1020] border ${
-                      errors.projectDetails
-                        ? "border-red-500"
-                        : "border-[#27334A]"
-                    } rounded-lg text-sm text-[#F7F9FC] placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-[#6366F1]`}
+                    value={form.details}
+                    onChange={update}
+                    placeholder="What are you building, or what needs to improve?"
+                    className={`field resize-none ${border("details")}`}
                   />
-                  {errors.projectDetails && (
-                    <p className="mt-1 text-xs text-red-400">
-                      {errors.projectDetails}
-                    </p>
-                  )}
+                  <FieldError msg={errors.details} />
                 </div>
 
-                {/* Consent checkbox */}
-                <div className="flex items-start gap-2.5 pt-1">
-                  <input
-                    type="checkbox"
-                    id="consent"
-                    name="consent"
-                    checked={formData.consent}
-                    onChange={handleChange}
-                    className="mt-1 h-4 w-4 rounded border-[#27334A] bg-[#0B1020] text-[#6366F1] focus:ring-[#6366F1]"
-                  />
-                  <label
-                    htmlFor="consent"
-                    className="text-xs text-[#A7B2C5] leading-normal"
-                  >
-                    I agree to allow Optimiserz to contact me regarding this
-                    inquiry. No unsolicited marketing will be sent.
+                <div>
+                  <label className="flex items-start gap-2.5 text-xs text-ink-soft">
+                    <input type="checkbox" name="consent" checked={form.consent} onChange={update} className="mt-0.5 h-4 w-4 rounded border-line bg-white accent-violet-500" />
+                    I agree that Optimiserz may contact me about this inquiry. No marketing emails.
                   </label>
+                  <FieldError msg={errors.consent} />
                 </div>
-                {errors.consent && (
-                  <p className="text-xs text-red-400">{errors.consent}</p>
+
+                <input type="text" name="website" tabIndex={-1} autoComplete="off" aria-hidden="true" className="hidden" />
+
+                {status === "failed" && (
+                  <p className="rounded-xl border border-rose-400/30 bg-rose-400/10 p-3 text-xs text-rose-200">
+                    Something went wrong and your message wasn't sent. Please try again, or email us at{" "}
+                    <a href={`mailto:${siteConfig.email}`} className="font-semibold underline">{siteConfig.email}</a>.
+                  </p>
                 )}
 
-                {/* Submit button */}
-                <div className="pt-2">
-                  <button
-                    type="submit"
-                    disabled={isSubmitting}
-                    className="inline-flex items-center justify-center px-6 py-3 text-sm font-semibold text-white bg-[#6366F1] hover:bg-[#5254e0] disabled:opacity-60 active:scale-[0.98] rounded-lg shadow-sm transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#38BDF8]"
-                  >
-                    {isSubmitting ? (
-                      "Processing..."
-                    ) : (
-                      <>
-                        Send Project Inquiry
-                        <Send className="w-4 h-4 ml-2" />
-                      </>
-                    )}
-                  </button>
-                </div>
+                <button type="submit" disabled={status === "sending"} className="btn-primary disabled:opacity-60">
+                  {status === "sending" ? "Sending..." : "Send project inquiry"} <Send className="h-4 w-4" />
+                </button>
               </form>
             )}
           </div>
 
-          {/* Right Column: Direct Info & Communication Guarantee */}
-          <div className="lg:col-span-4 space-y-6">
-            <div className="bg-[#151E32] border border-[#27334A] rounded-2xl p-6 space-y-4">
-              <h3 className="text-base font-bold text-[#F7F9FC]">
-                Direct Contact
-              </h3>
-              <p className="text-xs text-[#A7B2C5] leading-relaxed">
-                Prefer to write directly? Reach our technical leads via email:
-              </p>
-              <div className="p-3 rounded-lg bg-[#0B1020] border border-[#27334A] text-xs font-mono text-[#38BDF8]">
-                contact@optimiserz.com
-              </div>
+          <div className="space-y-6 lg:col-span-4">
+            <div className="card p-6">
+              <h3 className="text-base font-semibold">Direct contact</h3>
+              <p className="mt-2 text-xs text-ink-soft">Prefer to write directly? Email us:</p>
+              <a href={`mailto:${siteConfig.email}`} className="mt-4 flex items-center gap-2 rounded-xl border border-line bg-white p-3 font-mono text-xs text-violet-600 hover:border-violet-400/60">
+                <Mail className="h-4 w-4" /> {siteConfig.email}
+              </a>
             </div>
 
-            <div className="bg-[#151E32] border border-[#27334A] rounded-2xl p-6 space-y-3">
-              <div className="flex items-center gap-2 text-xs font-semibold text-[#F7F9FC]">
-                <Info className="w-4 h-4 text-[#38BDF8]" />
-                What to Expect
+            <div className="card p-6">
+              <div className="flex items-center gap-2 text-sm font-semibold">
+                <Info className="h-4 w-4 text-cyan-600" /> What to expect
               </div>
-              <ul className="text-xs text-[#A7B2C5] space-y-2 list-disc list-inside">
-                <li>
-                  We review your inquiry and assess technical feasibility.
-                </li>
-                <li>
-                  We schedule a focused discussion rather than high-pressure
-                  sales calls.
-                </li>
-                <li>
-                  You receive a clear scope outline and candid recommendations.
-                </li>
+              <ul className="mt-4 space-y-3 text-xs text-ink-soft">
+                {["We review your message and check what's possible.", "A focused chat, not a sales pitch.", "A clear scope and honest advice."].map((t) => (
+                  <li key={t} className="flex gap-2">
+                    <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-violet-500" />
+                    {t}
+                  </li>
+                ))}
               </ul>
             </div>
           </div>
         </div>
-      </div>
+      </Container>
     </section>
   );
 };

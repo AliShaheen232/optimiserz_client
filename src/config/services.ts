@@ -1,89 +1,131 @@
-import { ServiceItem } from '../types';
+import type { ServiceItem } from "../types";
 
 export const servicesData: ServiceItem[] = [
   {
-    id: 'web-development',
-    title: 'Web Development',
-    tagline: 'Web Experiences Built Around Your Business.',
-    shortDescription: 'From business websites to custom web applications and administrative platforms, we build digital solutions structured around your real operational needs.',
-    fullDescription: 'We build digital experiences designed around your users, your goals, and the way your business works. Whether you need a customer portal, an internal management system, or a modular SaaS product, we emphasize maintainability, responsive layouts, and clean API architecture.',
+    id: "web-apps",
+    title: "Websites & Web Apps",
+    tagline: "Web experiences built around your business.",
+    shortDescription: "Business sites, customer portals and SaaS products that are fast, clean and easy to maintain.",
+    fullDescription:
+      "We build websites and web applications around your users and the way your business actually works. From a landing page to a full SaaS product, we focus on speed, clean architecture and code your next developer can pick up easily.",
     capabilities: [
-      'Business websites and high-performance landing pages',
-      'Custom web applications and client portals',
-      'SaaS architecture, frontend and backend development',
-      'Admin panels, internal tools, and operational dashboards',
-      'API development and third-party system integrations',
-      'Performance audits, code refactoring, and site maintenance'
+      "Business websites and landing pages",
+      "Custom web apps and client portals",
+      "SaaS frontends and backends",
+      "Admin panels and dashboards",
+      "API development and integrations",
+      "Performance audits and refactoring",
     ],
-    techFocus: ['React', 'Next.js', 'TypeScript', 'Node.js', 'PostgreSQL', 'REST & GraphQL APIs'],
-    honestNote: 'We select tech stacks based on your actual business constraints and hosting requirements rather than forcing a rigid template.'
+    techFocus: ["React", "Next.js", "TypeScript", "Node.js", "Go", "Python", "PostgreSQL", "Elasticsearch"],
+    honestNote: "We pick the stack based on your needs and budget, not on habit or hype.",
   },
   {
-    id: 'blockchain-development',
-    title: 'Blockchain Development',
-    tagline: 'Build the Next Generation of Web3 Products.',
-    shortDescription: 'We help businesses develop practical decentralized applications, Solidity smart contracts, EVM integrations, and tokenization infrastructure.',
-    fullDescription: 'Whether you are developing smart contracts, exploring real-world asset tokenization, or integrating Web3 transactions into existing software, we turn blockchain concepts into tested technical architecture.',
+    id: "ai-automation",
+    title: "AI & Automation",
+    tagline: "AI that does real work for your team.",
+    shortDescription: "LLM tools and agent workflows that read your data, take action, and hand off to people when it matters.",
+    fullDescription:
+      "We find the repetitive, time-heavy tasks in your business and hand them to AI. That can be a smart assistant over your documents, or a multi-step agent that gathers information, uses your tools and asks a person to approve the important steps.",
     capabilities: [
-      'Smart contract development and Solidity engineering',
-      'EVM-compatible blockchain applications and dApps',
-      'Tokenization systems and digital asset logic',
-      'Web3 wallet connection and protocol integrations',
-      'Decentralized transaction workflows and indexers',
-      'Blockchain feasibility consulting and technical architecture'
+      "LLM integrations and custom assistants",
+      "RAG over your documents and knowledge base",
+      "Multi-step agent workflows with tool calling",
+      "Document processing and data extraction",
+      "Human approval steps for sensitive actions",
+      "Logging, retries and audit trails",
     ],
-    techFocus: ['Solidity', 'EVM Chains', 'Ethers.js / Viem', 'IPFS', 'Hardhat', 'Subgraphs'],
-    honestNote: 'We build rigorous smart contracts; however, blockchain products are not automatically immune to market risk. Formal security audits are conducted by dedicated third-party audit firms.'
+    techFocus: ["Python", "LangChain / LlamaIndex", "OpenAI & Claude APIs", "Vector databases", "FastAPI", "n8n"],
+    honestNote: "AI agents work inside clear limits. We don't promise zero errors without human oversight.",
   },
   {
-    id: 'artificial-intelligence',
-    title: 'Artificial Intelligence',
-    tagline: 'Make AI Useful for Your Business.',
-    shortDescription: 'Practical AI implementations that extract insights, automate document processing, and connect large language models to your existing company data.',
-    fullDescription: 'Move beyond one-off experimentation. We help you identify practical AI opportunities and build applications that fit your existing workflows, customer interactions, and business data.',
+    id: "search-visibility",
+    title: "Search & AI Visibility",
+    tagline: "Get found on Google and in AI answers.",
+    shortDescription: "SEO plus GEO (generative engine optimization), so you show up in search results and in ChatGPT, Gemini and Perplexity.",
+    fullDescription:
+      "People now find businesses through search engines and AI assistants. We fix the technical side of your site, shape content that answers real questions, and add the structured data that both Google and AI tools rely on.",
     capabilities: [
-      'Large language model (LLM) integrations and tailored chat interfaces',
-      'Retrieval-Augmented Generation (RAG) over internal knowledge bases',
-      'Automated document processing and structured information extraction',
-      'Semantic search and internal knowledge exploration systems',
-      'Workflow intelligence and decision support tools',
-      'Integration of AI capabilities into existing enterprise software'
+      "Technical SEO audits and fixes",
+      "Core Web Vitals and site speed",
+      "Keyword and content strategy",
+      "GEO: structured data and AI-friendly content",
+      "Google Business Profile and local SEO",
+      "Monthly ranking and traffic reports",
     ],
-    techFocus: ['Python', 'LangChain / LlamaIndex', 'OpenAI & Claude APIs', 'Vector Databases', 'FastAPI'],
-    honestNote: 'We focus on concrete business problems with measurable outcomes, avoiding speculative "revolutionary" claims.'
+    techFocus: ["Google Search Console", "GA4", "Schema.org", "Ahrefs / Semrush", "Lighthouse"],
+    honestNote: "Rankings take time, and nobody can guarantee the #1 spot. We aim for steady, measurable growth.",
   },
   {
-    id: 'agentic-ai',
-    title: 'Agentic AI & Intelligent Automation',
-    tagline: 'AI Agents That Help Work Move Forward.',
-    shortDescription: 'Multi-step autonomous workflows that gather information, execute tool calls, connect with business systems, and involve humans for critical approvals.',
-    fullDescription: 'Some business tasks involve more than a single prompt. We build AI-powered workflows that can gather information, use connected tools, complete defined steps, and involve people when decisions require human judgment.',
+    id: "blockchain",
+    title: "Blockchain Development",
+    tagline: "Web3 products, built and tested properly.",
+    shortDescription: "Smart contracts, dApps and tokenization on EVM chains and Solana.",
+    fullDescription:
+      "Whether you're launching a token, tokenizing real-world assets or adding Web3 payments to an existing product, we turn the idea into tested contracts and a clean user experience.",
     capabilities: [
-      'Multi-step workflow orchestration and agent execution',
-      'System integrations enabling agents to read and write via APIs',
-      'Human-in-the-loop (HITL) approval gates for sensitive actions',
-      'Automated research assistants and internal data collectors',
-      'Customer support routing and multi-tier inquiry triage',
-      'Structured error handling, retry limits, and audit logs'
+      "Solidity smart contracts",
+      "Solana programs in Rust",
+      "dApps and wallet integration",
+      "Tokenization and digital asset logic",
+      "Indexers and on-chain data",
+      "Architecture and feasibility consulting",
     ],
-    techFocus: ['Agentic Frameworks', 'Tool & Function Calling', 'Webhook Systems', 'State Machines'],
-    honestNote: 'AI agents operate within strict permissions and rate limits. We do not promise zero-error autonomy without human oversight.'
+    techFocus: ["Solidity", "Rust", "Solana / Anchor", "EVM chains", "Ethers.js / Viem", "Hardhat / Foundry"],
+    honestNote: "We test contracts thoroughly, but formal security audits should come from a dedicated audit firm.",
   },
   {
-    id: 'mailbox-bulk-email',
-    title: 'Mailbox Services & Bulk Email Infrastructure',
-    tagline: 'Email Infrastructure Built for Reliable Delivery.',
-    shortDescription: 'Domain authentication (SPF, DKIM, DMARC), business mailbox configurations, and high-volume email pipelines designed for compliant business communication.',
-    fullDescription: 'From business mailbox configuration to high-volume sending infrastructure, we help businesses build organized, reliable email systems with the right authentication, monitoring, and sending practices.',
+    id: "email",
+    title: "Email Infrastructure & Marketing",
+    tagline: "Emails that land in the inbox.",
+    shortDescription: "Business mailboxes, domain authentication and permission-based campaigns that reach real inboxes.",
+    fullDescription:
+      "We set up the email foundation your business needs: mailboxes, proper authentication and reliable sending. Then we help you run newsletters and campaigns that people actually signed up for.",
     capabilities: [
-      'Business mailbox setup, DNS configuration, and workspace migrations',
-      'Domain authentication hardening: SPF, DKIM, DMARC, and BIMI',
-      'Dedicated transactional and campaign sending infrastructure',
-      'SMTP and REST API integration with business software',
-      'Real-time bounce, complaint, and reputation monitoring',
-      'Permission-based bulk sending workflows with automated unsubscribe handling'
+      "Business mailbox setup and migrations",
+      "SPF, DKIM, DMARC and BIMI",
+      "Campaign and newsletter setup",
+      "Transactional email through APIs",
+      "Bounce and reputation monitoring",
+      "List hygiene and unsubscribe handling",
     ],
-    techFocus: ['DNS / DKIM / SPF / DMARC', 'Postfix / PowerMTA', 'Amazon SES / Postmark', 'Webhooks'],
-    honestNote: 'We strictly support permission-based, legitimate business communications. We do not support purchased contact lists, spam tactics, or inbox placement guarantees.'
-  }
+    techFocus: ["SPF / DKIM / DMARC", "Amazon SES", "Resend / Postmark", "Mailchimp / Brevo", "Webhooks"],
+    honestNote: "Permission-based email only. No bought lists, no spam tactics, no inbox guarantees.",
+  },
+  {
+    id: "hosting-care",
+    title: "Hosting & Care",
+    tagline: "Fast, safe and always up to date.",
+    shortDescription: "We host, monitor and maintain your site so you don't have to think about it.",
+    fullDescription:
+      "Launch is just the start. We keep your site online, secure and quick, fix issues before your customers notice, and make small improvements every month.",
+    capabilities: [
+      "Managed cloud hosting",
+      "SSL, CDN and DNS setup",
+      "Uptime and error monitoring",
+      "Daily backups",
+      "Security and dependency updates",
+      "Small monthly improvements",
+    ],
+    techFocus: ["Cloudflare", "AWS", "Vercel", "Docker", "Linux servers"],
+    honestNote: "Care plans cover updates and fixes. Big new features are scoped separately.",
+  },
+  {
+    id: "bots",
+    title: "Bot Development",
+    tagline: "Voice agents and trading bots, built responsibly.",
+    shortDescription: "AI calling agents for sales and support, and trading bots that run your strategy on your own accounts.",
+    fullDescription:
+      "We build two kinds of bots. AI voice agents handle follow-ups, reminders and lead qualification for people who agreed to hear from you. Trading bots turn your strategy into code that runs on your own exchange or broker account, with risk limits built in.",
+    capabilities: [
+      "AI voice agents for lead qualification",
+      "Appointment reminders and support calls",
+      "CRM and dialer integrations",
+      "Crypto and stock trading bots",
+      "Strategy backtesting and paper trading",
+      "Risk limits, alerts and dashboards",
+    ],
+    techFocus: ["Python", "Go", "Twilio / Vapi", "Exchange APIs", "WebSockets", "PostgreSQL"],
+    honestNote:
+      "Voice agents only call people who opted in, following PTA and local calling rules. Trading bots run on your accounts; we don't manage funds, give signals or promise returns.",
+  },
 ];

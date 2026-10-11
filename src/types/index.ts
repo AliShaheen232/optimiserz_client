@@ -1,9 +1,15 @@
-export type ServiceId = 
-  | 'web-development' 
-  | 'blockchain-development' 
-  | 'artificial-intelligence' 
-  | 'agentic-ai' 
-  | 'mailbox-bulk-email';
+import type { LucideIcon } from "lucide-react";
+
+export type Intent = "validate" | "optimise";
+
+export type ServiceId =
+  | "web-apps"
+  | "ai-automation"
+  | "search-visibility"
+  | "blockchain"
+  | "email"
+  | "hosting-care"
+  | "bots";
 
 export interface ServiceItem {
   id: ServiceId;
@@ -16,27 +22,19 @@ export interface ServiceItem {
   honestNote: string;
 }
 
-export interface SolutionCategory {
-  id: string;
+export interface Feature {
+  icon: LucideIcon;
   title: string;
-  description: string;
-  examples: string[];
+  text: string;
 }
 
 export interface InquiryFormData {
   fullName: string;
-  businessEmail: string;
-  companyName: string;
-  serviceCategory: string;
-  estimatedBudget: string;
-  projectDetails: string;
+  email: string;
+  company: string;
+  service: string;
+  details: string;
   consent: boolean;
 }
 
-export interface ValidationErrors {
-  fullName?: string;
-  businessEmail?: string;
-  serviceCategory?: string;
-  projectDetails?: string;
-  consent?: string;
-}
+export type ValidationErrors = Partial<Record<keyof InquiryFormData, string>>;
